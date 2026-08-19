@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  PYTHONFORANDROID_PREREQUISITES_INSTALL_INTERACTIVE: "0"
+
 jobs:
   build:
     name: Build Android APK
@@ -32,37 +35,65 @@ jobs:
       - name: Install Linux dependencies
         run: |
           sudo apt-get update
+
           sudo apt-get install -y \
-            git \
-            zip \
-            unzip \
+            ant \
             autoconf \
             automake \
+            autopoint \
+            ccache \
+            cmake \
+            g++ \
+            gcc \
+            git \
+            libffi-dev \
+            libltdl-dev \
+            libssl-dev \
             libtool \
-            pkg-config \
-            zlib1g-dev \
+            libtool-bin \
             libncurses5-dev \
             libncursesw5-dev \
             libtinfo6 \
-            cmake \
-            libffi-dev \
-            libssl-dev \
+            make \
+            pkg-config \
+            unzip \
+            wget \
+            zip \
+            zlib1g-dev \
             gettext
 
       - name: Upgrade pip
         run: |
-          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools wheel
 
       - name: Install Buildozer
         run: |
           python -m pip install buildozer
           python -m pip install "cython==0.29.34"
 
-      - name: Show versions
+      - name: Show build tools
         run: |
+          echo "===== PYTHON ====="
           python --version
+
+          echo "===== JAVA ====="
           java -version
+
+          echo "===== BUILDOZER ====="
           buildozer --version
+
+          echo "===== CYTHON ====="
+          cython --version
+
+          echo "===== AUTOCONF ====="
+          autoconf --version
+
+          echo "===== AUTOMAKE ====="
+          automake --version
+
+          echo "===== LIBTOOL ====="
+          libtool --version
 
       - name: Accept Android SDK license
         run: |
@@ -77,7 +108,12 @@ jobs:
         if: always()
         run: |
           echo "===== BIN DIRECTORY ====="
-          ls -lah bin/ || true
+
+          if [ -d "bin" ]; then
+            ls -lah bin/
+          else
+            echo "bin directory was not created."
+          fi
 
       - name: Upload APK
         if: success()
