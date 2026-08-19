@@ -19,7 +19,7 @@ Config.set('kivy', 'log_level', 'info')
 Config.set('graphics', 'width', '400')
 Config.set('graphics', 'height', '700')
 
-from kivy.app import App
+from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
@@ -29,8 +29,8 @@ from kivy.uix.popup import Popup
 from kivy.properties import StringProperty, NumericProperty, BooleanProperty, ListProperty, ObjectProperty
 from kivy.clock import Clock
 from kivy.utils import platform
-from kivymd.theming import ThemeManager
 from kivymd.uix.button import MDRaisedButton, MDFlatButton, MDRectangleFlatButton
+from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.label import MDLabel
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.progressbar import MDProgressBar
@@ -561,8 +561,7 @@ ScreenManager:
                         on_release: app.load_local_vpns()
 '''
 
-class MegaDownloaderApp(App):
-    theme_cls = ThemeManager()
+class MegaDownloaderApp(MDApp):
     title = "MEGA Downloader"
 
     def build(self):
