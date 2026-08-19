@@ -9,13 +9,10 @@ on:
 permissions:
   contents: read
 
-env:
-  PYTHONFORANDROID_PREREQUISITES_INSTALL_INTERACTIVE: "0"
-
 jobs:
   build:
     name: Build Android APK
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout source
@@ -24,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.11"
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -32,40 +29,27 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Install Linux dependencies
+      - name: Install required Linux dependencies
         run: |
-          sudo apt-get update
-
-          sudo apt-get install -y \
-            ant \
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
             autoconf \
             automake \
-            autopoint \
-            ccache \
-            cmake \
-            g++ \
-            gcc \
-            git \
-            libffi-dev \
-            libltdl-dev \
-            libssl-dev \
             libtool \
-            libtool-bin \
+            pkg-config \
+            zlib1g-dev \
+            libffi-dev \
+            libssl-dev \
             libncurses5-dev \
             libncursesw5-dev \
-            libtinfo6 \
-            make \
-            pkg-config \
-            unzip \
-            wget \
+            cmake \
+            gettext \
             zip \
-            zlib1g-dev \
-            gettext
+            unzip
 
       - name: Upgrade pip
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade setuptools wheel
+          python -m pip install --upgrade pip setuptools wheel
 
       - name: Install Buildozer
         run: |
@@ -74,26 +58,9 @@ jobs:
 
       - name: Show build tools
         run: |
-          echo "===== PYTHON ====="
           python --version
-
-          echo "===== JAVA ====="
           java -version
-
-          echo "===== BUILDOZER ====="
           buildozer --version
-
-          echo "===== CYTHON ====="
-          cython --version
-
-          echo "===== AUTOCONF ====="
-          autoconf --version
-
-          echo "===== AUTOMAKE ====="
-          automake --version
-
-          echo "===== LIBTOOL ====="
-          libtool --version
 
       - name: Accept Android SDK license
         run: |
@@ -108,12 +75,7 @@ jobs:
         if: always()
         run: |
           echo "===== BIN DIRECTORY ====="
-
-          if [ -d "bin" ]; then
-            ls -lah bin/
-          else
-            echo "bin directory was not created."
-          fi
+          find bin -maxdepth 2 -type f -print 2>/dev/null || true
 
       - name: Upload APK
         if: success()
