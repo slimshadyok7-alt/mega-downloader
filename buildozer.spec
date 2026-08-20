@@ -5,7 +5,7 @@ package.name = megadownloader
 package.domain = org.megadownloader
 
 source.dir = .
-source.include_exts = py,png,jpg,jpeg,kv,atlas,json,txt,ovpn
+source.include_exts = py,png,jpg,jpeg,kv,atlas,json,txt
 
 version = 1.0
 
@@ -15,6 +15,9 @@ orientation = portrait
 fullscreen = 0
 
 android.permissions = INTERNET,ACCESS_NETWORK_STATE,WAKE_LOCK
+android.storage_permissions = true
+
+android.gradle_dependencies = androidx.appcompat:appcompat:1.6.1,com.google.android.material:material:1.11.0
 
 android.api = 35
 android.minapi = 24

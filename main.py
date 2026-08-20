@@ -19,7 +19,7 @@ Config.set('kivy', 'log_level', 'info')
 Config.set('graphics', 'width', '400')
 Config.set('graphics', 'height', '700')
 
-from kivymd.app import MDApp
+from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
@@ -29,8 +29,8 @@ from kivy.uix.popup import Popup
 from kivy.properties import StringProperty, NumericProperty, BooleanProperty, ListProperty, ObjectProperty
 from kivy.clock import Clock
 from kivy.utils import platform
+from kivymd.theming import ThemeManager
 from kivymd.uix.button import MDRaisedButton, MDFlatButton, MDRectangleFlatButton
-from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.label import MDLabel
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.progressbar import MDProgressBar
@@ -47,14 +47,9 @@ if platform == 'android':
         Permission.READ_EXTERNAL_STORAGE
     ])
 
-# --- CONFIG ---
-if platform == 'android':
-    from android.storage import app_storage_path
-    DOWNLOAD_DIR = os.path.join(app_storage_path(), 'MEGA_Downloads')
-else:
-    DOWNLOAD_DIR = os.path.expanduser('~/MEGA_Downloads')
-
-VPN_DIR = os.path.join(os.path.expanduser('~'), '.mega_vpn_configs')
+# ─── CONFIG ──────────────────────────────────
+DOWNLOAD_DIR = '/sdcard/Download/MEGA_Downloads'
+VPN_DIR = os.path.expanduser('~/.mega_vpn_configs')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 os.makedirs(VPN_DIR, exist_ok=True)
 
@@ -566,7 +561,8 @@ ScreenManager:
                         on_release: app.load_local_vpns()
 '''
 
-class MegaDownloaderApp(MDApp):
+class MegaDownloaderApp(App):
+    theme_cls = ThemeManager()
     title = "MEGA Downloader"
 
     def build(self):
