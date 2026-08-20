@@ -47,9 +47,14 @@ if platform == 'android':
         Permission.READ_EXTERNAL_STORAGE
     ])
 
-# ─── CONFIG ──────────────────────────────────
-DOWNLOAD_DIR = '/sdcard/Download/MEGA_Downloads'
-VPN_DIR = os.path.expanduser('~/.mega_vpn_configs')
+# --- CONFIG ---
+if platform == 'android':
+    from android.storage import app_storage_path
+    DOWNLOAD_DIR = os.path.join(app_storage_path(), 'MEGA_Downloads')
+else:
+    DOWNLOAD_DIR = os.path.expanduser('~/MEGA_Downloads')
+
+VPN_DIR = os.path.join(os.path.expanduser('~'), '.mega_vpn_configs')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 os.makedirs(VPN_DIR, exist_ok=True)
 
